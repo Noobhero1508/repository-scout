@@ -1,0 +1,53 @@
+name: Repository Scout
+
+on:
+  schedule:
+    # 01:17 UTC = 08:17 tại Việt Nam/Thái Lan. Tránh đầu giờ để giảm nguy cơ bị trễ.
+    - cron: "17 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repository-scout
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Lấy mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Kiểm tra hệ thống
+        run: python -m unittest discover -s tests -v
+
+      - name: Tìm và xếp hạng repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m repo_scout
+
+      - name: Hiển thị báo cáo trong trang chạy workflow
+        shell: bash
+        run: cat reports/latest.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Lưu báo cáo vào repository
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/state.json reports/latest.md reports/latest.json reports/history
+          if git diff --cached --quiet; then
+            echo "Không có thay đổi mới."
+            exit 0
+          fi
+          git commit -m "chore: update repository scout report"
+          git push

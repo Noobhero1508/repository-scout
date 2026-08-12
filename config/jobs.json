@@ -1,0 +1,88 @@
+{
+  "settings": {
+    "lookback_days": 30,
+    "max_results_per_query": 50,
+    "report_top_n": 15,
+    "request_timeout_seconds": 30,
+    "exclude_archived": true,
+    "exclude_forks": true,
+    "report_path": "reports/latest.md",
+    "json_report_path": "reports/latest.json",
+    "history_dir": "reports/history",
+    "state_path": "data/state.json"
+  },
+  "jobs": [
+    {
+      "id": "new_and_interesting",
+      "title": "Repository mới và đáng chú ý",
+      "description": "Các dự án mới tạo gần đây, có tín hiệu quan tâm ban đầu và vẫn đang hoạt động.",
+      "queries": [
+        "created:>={since} stars:>=20",
+        "created:>={since} topic:automation stars:>=10",
+        "created:>={since} topic:developer-tools stars:>=10"
+      ],
+      "keywords": [
+        "automation",
+        "developer tools",
+        "productivity",
+        "workflow",
+        "agent"
+      ],
+      "preferred_languages": [
+        "Python",
+        "TypeScript",
+        "Go",
+        "Rust"
+      ],
+      "top_n": 15
+    },
+    {
+      "id": "github_automation",
+      "title": "Tự động hoá GitHub và công việc lập trình",
+      "description": "Công cụ hỗ trợ GitHub Actions, quản lý repository, release và quy trình phát triển.",
+      "queries": [
+        "github actions automation pushed:>={since} stars:>=20",
+        "repository automation pushed:>={since} stars:>=20",
+        "release automation pushed:>={since} stars:>=20"
+      ],
+      "keywords": [
+        "github actions",
+        "repository automation",
+        "release",
+        "ci/cd",
+        "workflow",
+        "developer productivity"
+      ],
+      "preferred_languages": [
+        "Python",
+        "TypeScript",
+        "Go"
+      ],
+      "top_n": 15
+    },
+    {
+      "id": "ai_agents",
+      "title": "AI agents và tự động hoá bằng AI",
+      "description": "Framework và công cụ xây dựng agent, AI workflow và trợ lý lập trình.",
+      "queries": [
+        "ai agent framework pushed:>={since} stars:>=50",
+        "topic:ai-agents pushed:>={since} stars:>=20",
+        "agentic workflow pushed:>={since} stars:>=20"
+      ],
+      "keywords": [
+        "ai agent",
+        "agents",
+        "agentic",
+        "llm",
+        "workflow",
+        "tool use"
+      ],
+      "preferred_languages": [
+        "Python",
+        "TypeScript"
+      ],
+      "top_n": 15
+    }
+  ]
+}
+
